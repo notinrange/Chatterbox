@@ -1,10 +1,11 @@
-import 'package:chatterbox/screens/auth/login_screen.dart';
+import 'package:chatterbox/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 late Size mq;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   _initializeFirebase();
   runApp(const MyApp());
 }
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.blue.shade200,
         )
       ),
-      home: const LoginScreen()
+      home: const SplashScreen()
     );
   }
 }
