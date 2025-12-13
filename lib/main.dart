@@ -1,13 +1,18 @@
 import 'package:chatterbox/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 late Size mq;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  _initializeFirebase();
-  runApp(const MyApp());
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);// for enable full screen for splash screen
+  SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((value){
+        _initializeFirebase();
+        runApp(const MyApp());
+    });
 }
 
 class MyApp extends StatelessWidget {

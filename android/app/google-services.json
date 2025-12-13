@@ -12,7 +12,20 @@
           "package_name": "com.example.chatterbox"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "210116629942-89eqhgm4j8miklm8oue7bp6c9q1bsrr4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chatterbox",
+            "certificate_hash": "e0bbb9650e9f8e880e0b03cce0c81a86e158300e"
+          }
+        },
+        {
+          "client_id": "210116629942-694g52mtv8ev59c2m9alifj9savh5aum.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC0-OEVi4pMgVXND9lyp-TRd2nGKRtuIkI"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210116629942-694g52mtv8ev59c2m9alifj9savh5aum.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "210116629942-s28j7qh0eqqdbtu55ukdsppnn4ilmgrv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatterbox"
+              }
+            }
+          ]
         }
       }
     }

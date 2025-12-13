@@ -63,6 +63,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '210116629942',
     projectId: 'chatter-box-85540',
     storageBucket: 'chatter-box-85540.firebasestorage.app',
+    androidClientId: '210116629942-89eqhgm4j8miklm8oue7bp6c9q1bsrr4.apps.googleusercontent.com',
+    iosClientId: '210116629942-s28j7qh0eqqdbtu55ukdsppnn4ilmgrv.apps.googleusercontent.com',
     iosBundleId: 'com.example.chatterbox',
   );
+
 }

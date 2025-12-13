@@ -1,6 +1,11 @@
+import "dart:developer";
+
+import "package:chatterbox/api/apis.dart";
 import "package:chatterbox/main.dart";
+import "package:chatterbox/screens/auth/login_screen.dart";
 import "package:chatterbox/screens/home_screen.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +20,16 @@ class _SplashScreenState extends State<SplashScreen>{
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 1500),(){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const HomeScreen()));
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent)
+      );
+      if(Apis.auth.currentUser != null){
+        log('\nUser: ${Apis.auth.currentUser}');
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const HomeScreen()));
+      }else{
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>const LoginScreen()));
+      }
     });
   }
 
