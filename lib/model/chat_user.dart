@@ -24,7 +24,7 @@ class ChatUser {
     image = json['image'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
-    isOnline = json['is_online'] ?? '';
+    isOnline = json['is_online'] ?? true;
     id = json['id'] ?? '';
     lastActive = json['last_active'] ?? '';
     about = json['about '] ?? '';
