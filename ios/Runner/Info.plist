@@ -60,5 +60,12 @@
 		</dict>
 	</array>
 	<!-- End of the Google Sign-in Section -->
+
+
+	<!-- Permission for picking Image from Phone -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<value>App requires access of photo library for picking pictures.</value>
+	<key>NSCameraUsageDescription</key>
+	<value>App requires access of the camera for taking pictures.</value>
 </dict>
 </plist>

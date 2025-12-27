@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatterbox/model/chat_user.dart';
+import 'package:chatterbox/screens/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,11 @@ class _ChatUserCardState extends State<ChatUserCard> {
       color: Colors.blue.shade100,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
-        onTap: () {}, 
+        onTap: () {
+          Navigator.push(
+            context, MaterialPageRoute(builder: (_)=>ChatScreen(user: widget.user))
+          );
+        }, 
         child: ListTile(
           // leading: CircleAvatar(child: Icon(CupertinoIcons.person)),
           leading: ClipRRect(
@@ -37,7 +42,11 @@ class _ChatUserCardState extends State<ChatUserCard> {
           ),
           title: Text(widget.user.name ?? 'Unknown'),
           subtitle: Text(widget.user.about ?? 'Hey, I am using ChatterBox!', maxLines: 1,),
-          trailing: Text('12:00 PM', style: TextStyle(color: Colors.black54),),
+          trailing: Container(
+            width: 15,
+            height: 15,
+            decoration: BoxDecoration(color: Colors.greenAccent.shade400, borderRadius: BorderRadius.circular(10)),
+          ),
         ),
       )
     );
