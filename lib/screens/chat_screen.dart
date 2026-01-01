@@ -1,10 +1,12 @@
-import 'dart:convert';
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatterbox/api/apis.dart';
 import 'package:chatterbox/main.dart';
 import 'package:chatterbox/model/chat_user.dart';
+import 'package:chatterbox/model/message.dart';
+import 'package:chatterbox/widgets/message_card.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,55 +19,116 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  List<Message> _list = [];
+
+  final _textController = TextEditingController();
+
+  bool _showEmoji = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: _appBar(),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder(
-              stream: Apis.getAllMessages(),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                  case ConnectionState.none:
-                    return const Center(child: CircularProgressIndicator());
-                  case ConnectionState.active:
-                  case ConnectionState.done:
-                    final data = snapshot.data?.docs;
-                    log('Data: ${jsonEncode(data![0].data())}');
-                    // for(var i in data!){
-                    //   log('Data: ${jsonEncode(i.data())}');
-                    //   _list.add(i.data()['name']);
-                    // }
-                    // _list =
-                    //     data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
-                    //         [];
-                    final _list = [];
-            
-                    if (_list.isNotEmpty) {
-                      return ListView.builder(
-                          itemCount: _list.length,
-                          padding: EdgeInsets.only(top: mq.height * 0.01),
-                          physics: BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Text('Message: ${_list[index]}');
-                          });
-                    } else {
-                      return const Center(
-                          child: Text('Say Hi! 👋',
-                              style: TextStyle(fontSize: 20)));
-                    }
-                }
-              },
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SafeArea(
+        child: PopScope(
+          canPop: !_showEmoji,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (_showEmoji) {
+              setState(() {
+                _showEmoji = false;
+              });
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              flexibleSpace: _appBar(),
+            ),
+            backgroundColor: const Color.fromARGB(255, 234, 248, 255),
+            body: Column(
+              children: [
+                Expanded(
+                  child: StreamBuilder(
+                    stream: Apis.getAllMessages(widget.user),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                        case ConnectionState.none:
+                          return const SizedBox();
+                        case ConnectionState.active:
+                        case ConnectionState.done:
+                          final data = snapshot.data?.docs;
+                          _list =
+                              data?.map((e) => Message.fromJson(e.data())).toList() ??
+                                  [];
+                          
+                  
+                        //   _list.clear();
+                        // _list.add(Message(
+                        //   fromId: Apis.user.uid,
+                        //   toId: 'zyx',
+                        //   read: '',
+                        //   type: Type.text,
+                        //   sent: '12:00 AM',
+                        //   msg: 'Hii',
+                        //   ));
+          
+          
+                        //   _list.add(Message(
+                        //   fromId: 'zyx',
+                        //   toId: Apis.user.uid,
+                        //   read: '',
+                        //   type: Type.text,
+                        //   sent: '12:05 AM',
+                        //   msg: 'Hello',
+                        //   ));
+          
+                          if (_list.isNotEmpty) {
+                            return ListView.builder(
+                                itemCount: _list.length,
+                                padding: EdgeInsets.only(top: mq.height * 0.01),
+                                physics: BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return MessageCard(message: _list[index],);
+                                });
+                          } else {
+                            return const Center(
+                                child: Text('Say Hi! 👋',
+                                    style: TextStyle(fontSize: 20)));
+                          }
+                      }
+                    },
+                  ),
+                ),
+                _chatInput(),
+                if(_showEmoji)
+                    EmojiPicker(
+                        textEditingController: _textController, // pass here the same [TextEditingController] that is connected to your input field, usually a [TextFormField]
+                        config: Config(
+                            height: 256,
+                            checkPlatformCompatibility: true,
+                            emojiViewConfig: EmojiViewConfig(
+                                                columns: 8,
+                                                backgroundColor: const Color.fromARGB(255, 234, 248, 255),
+                                                emojiSizeMax: 28 * (Platform.isIOS ?  1.20 :  1.0),
+                                              ),
+                            viewOrderConfig: const ViewOrderConfig(
+                                                  top: EmojiPickerItem.searchBar ,
+                                                  middle: EmojiPickerItem.categoryBar ,
+                                                  bottom: EmojiPickerItem.emojiView,
+                                              ),
+                            skinToneConfig: const SkinToneConfig(),
+                            categoryViewConfig: const CategoryViewConfig(),
+                            bottomActionBarConfig: const BottomActionBarConfig(),
+                            searchViewConfig: const SearchViewConfig(),
+                        ),
+                    )
+                
+                
+              ],
             ),
           ),
-          _chatInput()
-        ],
+        ),
       ),
     );
   }
@@ -126,17 +189,26 @@ class _ChatScreenState extends State<ChatScreen> {
                   borderRadius: BorderRadius.circular(30)),
               child: Row(children: [
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState((){
+                        FocusScope.of(context).unfocus();
+                        _showEmoji = !_showEmoji;
+                      });
+                    },
                     icon: const Icon(
                       Icons.emoji_emotions,
                       color: Colors.blueAccent,
                       size: 25,
                     )),
                 Expanded(
-                  child: const TextField(
+                  child:  TextField(
+                    controller: _textController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    decoration: InputDecoration(
+                    onTap: (){
+                      if(_showEmoji) setState(() => _showEmoji = !_showEmoji);
+                    },
+                    decoration: const InputDecoration(
                       hintText: 'Type Something...',
                       hintStyle: TextStyle(color: Colors.blueAccent),
                       border: InputBorder.none,
@@ -164,7 +236,12 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                if(_textController.text.isNotEmpty){
+                  Apis.sendMessage(widget.user, _textController.text);
+                  _textController.text = '';
+                }
+              },
               minWidth: 0,
               padding: const EdgeInsets.only(
                   top: 10, bottom: 10, right: 5, left: 10),
