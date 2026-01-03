@@ -6,6 +6,7 @@ import "package:chatterbox/api/apis.dart";
 import "package:chatterbox/main.dart";
 import "package:chatterbox/model/chat_user.dart";
 import "package:chatterbox/screens/auth/login_screen.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:google_sign_in/google_sign_in.dart";
@@ -47,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   await GoogleSignIn().signOut().then((value) {
                     Navigator.pop(context);
                     Navigator.pop(context);
+                    Apis.auth = FirebaseAuth.instance;
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (_) => LoginScreen()));
                   });

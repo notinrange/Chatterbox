@@ -3,6 +3,7 @@ import 'package:chatterbox/helpers/my_date_util.dart';
 import 'package:chatterbox/model/chat_user.dart';
 import 'package:chatterbox/model/message.dart';
 import 'package:chatterbox/screens/chat_screen.dart';
+import 'package:chatterbox/widgets/dialogs/profile_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -44,24 +45,29 @@ class _ChatUserCardState extends State<ChatUserCard> {
 
                   return ListTile(
                       // leading: CircleAvatar(child: Icon(CupertinoIcons.person)),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(mq.height * 0.03),
-                        child: CachedNetworkImage(
-                          width: mq.height * 0.055,
-                          height: mq.height * 0.055,
-                          imageUrl: widget.user.image ??
-                              "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fbrfj77msig1j3b39vshj.png",
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              const CircleAvatar(
-                                  child: Icon(CupertinoIcons.person)),
+                      leading: InkWell(
+                        onTap: (){
+                          showDialog(context: context, builder: (_)=>ProfileDialog(user: widget.user));
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(mq.height * 0.03),
+                          child: CachedNetworkImage(
+                            width: mq.height * 0.055,
+                            height: mq.height * 0.055,
+                            imageUrl: widget.user.image ??
+                                "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fbrfj77msig1j3b39vshj.png",
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                const CircleAvatar(
+                                    child: Icon(CupertinoIcons.person)),
+                          ),
                         ),
                       ),
                       title: Text(widget.user.name ?? 'Unknown'),
                       subtitle: Text(
                         _message != null
-                            ? _message!.msg
+                            ? _message!.type == Type.image ? 'image' : _message!.msg
                             : widget.user.about ??
                                 'Hey, I am using ChatterBox!',
                         maxLines: 1,

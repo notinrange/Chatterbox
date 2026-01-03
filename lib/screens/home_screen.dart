@@ -7,6 +7,7 @@ import "package:chatterbox/screens/profile_screen.dart";
 import "package:chatterbox/widgets/chat_user_card.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,6 +24,16 @@ class _HomeScreenState extends State<HomeScreen>{
   void initState() {
     super.initState();
     Apis.getSelfInfo();
+    // for setting user status to active
+    Apis.updateActiveStatus(true);
+    SystemChannels.lifecycle.setMessageHandler((message){
+      log('Message : ${message}');
+      if(Apis.auth.currentUser != null){
+          if(message.toString().contains('resume')) Apis.updateActiveStatus(true);
+          if(message.toString().contains('pause')) Apis.updateActiveStatus(false);
+      }
+      return Future.value(message);
+    });
   }
 
   @override
